@@ -112,10 +112,7 @@ const QuoteId = styled.small`
 // Need to be super sure we are not relying on PureComponent here for
 // things we should be doing in the selector as we do not know if consumers
 // will be using PureComponent
-export default class QuoteItem extends React.PureComponent {
-  render() {
-    const { quote, isDragging, isGroupedOver, provided } = this.props;
-
+const QuoteItem =  ({quote, isDragging, isGroupedOver, provided}) =>  {
     return (
       <Container
         href={quote.author.url}
@@ -136,5 +133,6 @@ export default class QuoteItem extends React.PureComponent {
         </Content>
       </Container>
     );
-  }
 }
+
+export default QuoteItem

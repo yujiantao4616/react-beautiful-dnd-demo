@@ -7,51 +7,63 @@ import Column from "./column";
 import reorder, { reorderQuoteMap } from "./reorder";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { authorQuoteMap } from "./data";
+import { Button } from "antd";
+import { ProCard } from "@ant-design/pro-components";
+import { useSetState } from "ahooks";
+import "./styles.css";
 
-const ParentContainer = styled.div`
-  /* height: ${({ height }) => height}; */
-  /* overflow-x: hidden;
-  overflow-y: auto; */
-`;
+const DishesType = ({ edit, ordered, columns }) => (
+  <Droppable
+    droppableId="board"
+    type="COLUMN"
+    direction="vertical"
+    ignoreContainerClipping={false}
+    isCombineEnabled={false}
+  >
+    {(provided) => (
+      <div ref={provided.innerRef} {...provided.droppableProps}>
+        {ordered.map((key, index) => (
+          <Column
+            key={key}
+            index={index}
+            title={key}
+            quotes={columns[key]}
+            isScrollable={false}
+            isCombineEnabled={false}
+            edit={edit}
+          />
+        ))}
+        {provided.placeholder}
+      </div>
+    )}
+  </Droppable>
+);
 
-const Container = styled.div`
-  background-color: ${colors.B100};
-  /* min-height: 100vh; */
-  /* like display:flex but will allow bleeding over the window width */
-  /* min-width: 100vw; */
-  display: inline-flex;
-`;
-
-class Board extends Component {
+const Board = ({ initial }) => {
   /* eslint-disable react/sort-comp */
-  static defaultProps = {
-    isCombineEnabled: false
-  };
+  const [state, setState] = useSetState({
+    columns: initial,
+    ordered: Object.keys(initial),
+    edit: false,
+  });
 
-  state = {
-    columns: this.props.initial,
-    ordered: Object.keys(this.props.initial)
-  };
-
-  boardRef;
-
-  onDragEnd = result => {
+  const onDragEnd = (result) => {
     if (result.combine) {
       if (result.type === "COLUMN") {
-        const shallow = [...this.state.ordered];
+        const shallow = [...state.ordered];
         shallow.splice(result.source.index, 1);
-        this.setState({ ordered: shallow });
+        setState({ ordered: shallow });
         return;
       }
 
-      const column = this.state.columns[result.source.droppableId];
+      const column = state.columns[result.source.droppableId];
       const withQuoteRemoved = [...column];
       withQuoteRemoved.splice(result.source.index, 1);
       const columns = {
-        ...this.state.columns,
-        [result.source.droppableId]: withQuoteRemoved
+        ...state.columns,
+        [result.source.droppableId]: withQuoteRemoved,
       };
-      this.setState({ columns });
+      setState({ columns });
       return;
     }
 
@@ -73,81 +85,65 @@ class Board extends Component {
 
     // reordering column
     if (result.type === "COLUMN") {
-      const ordered = reorder(
-        this.state.ordered,
-        source.index,
-        destination.index
-      );
+      const ordered = reorder(state.ordered, source.index, destination.index);
 
-      this.setState({
-        ordered
+      setState({
+        ordered,
       });
 
       return;
     }
 
     const data = reorderQuoteMap({
-      quoteMap: this.state.columns,
+      quoteMap: state.columns,
       source,
-      destination
+      destination,
     });
 
-    this.setState({
-      columns: data.quoteMap
+    setState({
+      columns: data.quoteMap,
     });
   };
 
-  render() {
-    const columns = this.state.columns;
-    const ordered = this.state.ordered;
-    const { containerHeight } = this.props;
+  const columns = state.columns;
+  const ordered = state.ordered;
 
-    const board = (
-      <Droppable
-        droppableId="board"
-        type="COLUMN"
-        direction="horizontal"
-        ignoreContainerClipping={Boolean(containerHeight)}
-        isCombineEnabled={this.props.isCombineEnabled}
-      >
-        {provided => (
-          <Container ref={provided.innerRef} {...provided.droppableProps}>
-            {ordered.map((key, index) => (
-              <Column
-                key={key}
-                index={index}
-                title={key}
-                quotes={columns[key]}
-                isScrollable={this.props.withScrollableColumns}
-                isCombineEnabled={this.props.isCombineEnabled}
-              />
-            ))}
-            {provided.placeholder}
-          </Container>
+  return (
+    <React.Fragment>
+      <ProCard style={{
+        textAlign:'right'
+      }}>
+        <Button>添加分类</Button>
+        {!state.edit ? (
+          <Button
+            type="primary"
+            onClick={() => {
+              setState({
+                edit: true,
+              });
+            }}
+          >
+            编辑
+          </Button>
+        ) : (
+          <Button
+            type="primary"
+            onClick={() => {
+              setState({
+                edit: false,
+              });
+            }}
+          >
+            保存
+          </Button>
         )}
-      </Droppable>
-    );
-
-    return (
-      <React.Fragment>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          {containerHeight ? (
-            <ParentContainer height={containerHeight}>{board}</ParentContainer>
-          ) : (
-            board
-          )}
-        </DragDropContext>
-        <Global
-          styles={css`
-            body {
-              background: ${colors.B200};
-            }
-          `}
-        />
-      </React.Fragment>
-    );
-  }
-}
+      </ProCard>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <DishesType edit={state.edit} ordered={ordered} columns={columns} />
+      </DragDropContext>
+    </React.Fragment>
+  );
+};
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(<Board initial={authorQuoteMap} />, rootElement);

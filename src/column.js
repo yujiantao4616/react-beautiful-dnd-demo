@@ -4,13 +4,9 @@ import { colors } from "@atlaskit/theme";
 import { grid, borderRadius } from "./constants";
 import { Draggable } from "react-beautiful-dnd";
 import QuoteList from "./primatives/quote-list";
-import Title from "./primatives/title";
-
-const Container = styled.div`
-  margin: ${grid}px;
-  display: flex;
-  flex-direction: column;
-`;
+import DishesTypeTitle from "./primatives/title";
+import { ProCard } from "@ant-design/pro-components";
+import { Input , Button} from 'antd'
 
 const Header = styled.div`
   display: flex;
@@ -26,36 +22,30 @@ const Header = styled.div`
   }
 `;
 
-export default class Column extends Component {
-  render() {
-    const title = this.props.title;
-    const quotes = this.props.quotes;
-    const index = this.props.index;
-    return (
-      <Draggable draggableId={title} index={index}>
-        {(provided, snapshot) => (
-          <Container ref={provided.innerRef} {...provided.draggableProps}>
-            <Header isDragging={snapshot.isDragging}>
-              <Title
-                isDragging={snapshot.isDragging}
-                {...provided.dragHandleProps}
-              >
-                {title}
-              </Title>
-            </Header>
-            <QuoteList
-              listId={title}
-              listType="QUOTE"
-              style={{
-                backgroundColor: snapshot.isDragging ? colors.G50 : null
-              }}
-              quotes={quotes}
-              internalScroll={this.props.isScrollable}
-              isCombineEnabled={Boolean(this.props.isCombineEnabled)}
-            />
-          </Container>
-        )}
-      </Draggable>
-    );
-  }
-}
+const Column = ({ title, quotes, index, isScrollable, isCombineEnabled, edit }) => {
+  return (
+    <Draggable draggableId={title} index={index}>
+      {(provided, snapshot) => (
+        <ProCard ref={provided.innerRef} {...provided.draggableProps} >
+          <Header isDragging={snapshot.isDragging}>
+            <DishesTypeTitle title={title} isDragging={snapshot.isDragging} {...provided.dragHandleProps} draggable={edit} edit={edit}/>
+          </Header>
+          <QuoteList
+            listId={title}
+            listType="QUOTE"
+            style={{
+              backgroundColor: snapshot.isDragging ? colors.G50 : null,
+              width: "100%"
+            }}
+            quotes={quotes}
+            internalScroll={isScrollable}
+            isCombineEnabled={Boolean(isCombineEnabled)}
+          />
+          <Button size='large'>新增菜品</Button>
+        </ProCard>
+      )}
+    </Draggable>
+  );
+};
+
+export default Column

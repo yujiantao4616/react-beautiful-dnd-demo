@@ -1,0 +1,67 @@
+Arguments: 
+  /Users/yujiantao/.nvm/versions/node/v14.18.2/bin/node /usr/local/bin/yarn
+
+PATH: 
+  /Users/yujiantao/.bun/bin:/Users/yujiantao/.nvm/versions/node/v14.18.2/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin:/Library/Apple/usr/bin:/Users/yujiantao/.bun/bin:/Users/yujiantao/.nvm/versions/node/v14.18.2/bin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  14.18.2
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: http://npm.smm.cn/@babel%2fruntime-corejs2/-/runtime-corejs2-7.19.2.tgz: Request failed "500 Internal Server Error"
+      at ResponseError.ExtendableBuiltin (/usr/local/lib/node_modules/yarn/lib/cli.js:696:66)
+      at new ResponseError (/usr/local/lib/node_modules/yarn/lib/cli.js:802:124)
+      at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:67017:16)
+      at Request.emit (events.js:400:28)
+      at Request.module.exports.Request.onRequestResponse (/usr/local/lib/node_modules/yarn/lib/cli.js:141542:10)
+      at ClientRequest.emit (events.js:400:28)
+      at HTTPParser.parserOnIncomingClient (_http_client.js:647:27)
+      at HTTPParser.parserOnHeadersComplete (_http_common.js:127:17)
+      at HTTPParser.execute (<anonymous>)
+      at Socket.socketOnData (_http_client.js:515:22)
+
+npm manifest: 
+  {
+    "name": "react-beautiful-dnd-simple-board",
+    "version": "1.0.0",
+    "description": "",
+    "keywords": [],
+    "main": "src/index.js",
+    "dependencies": {
+      "@atlaskit/theme": "8.1.2",
+      "@emotion/core": "10.0.10",
+      "@emotion/styled": "10.0.10",
+      "react": "16.8.3",
+      "react-beautiful-dnd": "10.1.1",
+      "react-dom": "16.8.3",
+      "react-scripts": "2.1.8",
+      "styled-components": "4.2.0"
+    },
+    "devDependencies": {
+      "typescript": "3.3.3"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test --env=jsdom",
+      "eject": "react-scripts eject"
+    },
+    "browserslist": [
+      ">0.2%",
+      "not dead",
+      "not ie <= 11",
+      "not op_mini all"
+    ]
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
