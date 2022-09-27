@@ -8,7 +8,7 @@ function InstructionItem({ list, edit, title, onChange }) {
   });
   useEffect(() => {
     // 把空的过滤掉
-    const newList = state.instructionList.filter(item => item.value && item.label)
+    // const newList = state.instructionList.filter(item => item.value && item.label)
     onChange(state.instructionList, title)
   }, [state.instructionList])
 
